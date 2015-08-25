@@ -1,0 +1,8 @@
+# 1 "files"
+# 1 "<interno>"
+# 1 "<línea-de-orden>"
+# 1 "files"
+flameletModel/flameletModel.C
+flameletModelA/flameletModelA.C
+
+LIB = $(FOAM_USER_LIBBIN)/libFlameletModel

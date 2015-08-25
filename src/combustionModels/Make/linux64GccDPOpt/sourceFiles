@@ -1,0 +1,3 @@
+SOURCE = \
+flameletModel/flameletModel.C\
+flameletModelA/flameletModelA.C

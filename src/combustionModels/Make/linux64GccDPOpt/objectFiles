@@ -1,0 +1,3 @@
+OBJECTS = \
+$(OBJECTS_DIR)/flameletModel.o\
+$(OBJECTS_DIR)/flameletModelA.o
