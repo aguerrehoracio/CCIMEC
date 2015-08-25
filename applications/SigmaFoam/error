@@ -1,0 +1,14 @@
+Making dependency list for source file XiFoam.C
+In file included from XiFoam.C:102:0:
+createFields.H: In function ‘int main(int, char**)’:
+createFields.H:26:27: warning: unused variable ‘psi’ [-Wunused-variable]
+     const volScalarField& psi = thermo.psi();
+                           ^
+In file included from XiFoam.C:104:0:
+/opt/OpenFOAM/OpenFOAM-2.4.x/src/finiteVolume/lnInclude/initContinuityErrs.H:37:8: warning: unused variable ‘cumulativeContErr’ [-Wunused-variable]
+ scalar cumulativeContErr = 0;
+        ^
+In file included from XiFoam.C:105:0:
+/opt/OpenFOAM/OpenFOAM-2.4.x/src/finiteVolume/lnInclude/readTimeControls.H:38:8: warning: unused variable ‘maxDeltaT’ [-Wunused-variable]
+ scalar maxDeltaT =
+        ^
