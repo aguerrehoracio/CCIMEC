@@ -1,8 +1,15 @@
 # 1 "files"
-# 1 "<interno>"
-# 1 "<línea-de-orden>"
+# 1 "<command-line>"
 # 1 "files"
 flameletModel/flameletModel.C
 flameletModelA/flameletModelA.C
+CantPopeBray/CantPopeBray.C
+coherentFlameModel1/coherentFlameModel1.C
+coherentFlameModel2a/coherentFlameModel2a.C
+coherentFlameModel2b/coherentFlameModel2b.C
+coherentFlameModel3/coherentFlameModel3.C
+ChengDiringer/ChengDiringer.C
+ChoiHuh1/ChoiHuh1.C
+ChoiHuh2/ChoiHuh2.C
 
 LIB = $(FOAM_USER_LIBBIN)/libFlameletModel

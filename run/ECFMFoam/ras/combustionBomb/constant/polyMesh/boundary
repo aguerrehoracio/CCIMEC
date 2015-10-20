@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.3.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+6
+(
+    left
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       26460;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 0 4 5 1 ) );
+    }
+    right
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       26901;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 2 3 7 6 ) );
+    }
+    top
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       27342;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 1 5 7 3 ) );
+    }
+    bottom
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       27783;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 0 2 6 4 ) );
+    }
+    front
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       28224;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 0 1 3 2 ) );
+    }
+    back
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          441;
+        startFace       28665;
+        inGroups        1 ( zeroGradient );
+        faces           ( ( 4 5 7 6 ) );
+    }
+)
+
+// ************************************************************************* //

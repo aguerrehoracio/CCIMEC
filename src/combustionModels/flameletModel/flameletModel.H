@@ -42,6 +42,7 @@ SourceFiles
 #include "fvCFD.H"
 #include "IOdictionary.H"
 #include "turbulenceModel.H"
+#include "psiuReactionThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,15 +76,16 @@ public:
             flameletModel,
             dictionary,
             (
-				volScalarField& rho,	
-				volVectorField& U,
-				volScalarField& Su,
-				volScalarField& Sigma,
-				volScalarField& b,
-				compressible::turbulenceModel& turbulence,
-				IOdictionary& mdData
+	        volScalarField& rho,	
+		volVectorField& U,
+		volScalarField& Su,
+		volScalarField& Sigma,
+		volScalarField& b,
+		psiuReactionThermo& thermo,
+		compressible::turbulenceModel& turbulence,
+		IOdictionary& mdData
             ),
-            (rho, U, Su, Sigma, b, turbulence, mdData)
+            (rho, U, Su, Sigma, b, thermo, turbulence, mdData)
         );
 
 
@@ -92,13 +94,14 @@ public:
         //- Select null constructed
         static autoPtr<flameletModel> New
         (
-			volScalarField& rho,
+	    volScalarField& rho,
             volVectorField& U,
-			volScalarField& Su,
-			volScalarField& Sigma,
-			volScalarField& b,
-			compressible::turbulenceModel& turbulence,
-			IOdictionary& mdData
+	    volScalarField& Su,
+	    volScalarField& Sigma,
+	    volScalarField& b,
+	    psiuReactionThermo& thermo,
+	    compressible::turbulenceModel& turbulence,
+	    IOdictionary& mdData
         );
 
 

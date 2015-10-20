@@ -1,3 +1,11 @@
 DEPENDENCIES = \
 flameletModel/flameletModel.dep\
-flameletModelA/flameletModelA.dep
+flameletModelA/flameletModelA.dep\
+CantPopeBray/CantPopeBray.dep\
+coherentFlameModel1/coherentFlameModel1.dep\
+coherentFlameModel2a/coherentFlameModel2a.dep\
+coherentFlameModel2b/coherentFlameModel2b.dep\
+coherentFlameModel3/coherentFlameModel3.dep\
+ChengDiringer/ChengDiringer.dep\
+ChoiHuh1/ChoiHuh1.dep\
+ChoiHuh2/ChoiHuh2.dep

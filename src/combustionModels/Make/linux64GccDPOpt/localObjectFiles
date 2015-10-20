@@ -1,3 +1,11 @@
 LOCAL_OBJECTS = \
 flameletModel.o\
-flameletModelA.o
+flameletModelA.o\
+CantPopeBray.o\
+coherentFlameModel1.o\
+coherentFlameModel2a.o\
+coherentFlameModel2b.o\
+coherentFlameModel3.o\
+ChengDiringer.o\
+ChoiHuh1.o\
+ChoiHuh2.o

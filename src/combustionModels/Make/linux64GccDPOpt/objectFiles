@@ -1,3 +1,11 @@
 OBJECTS = \
 $(OBJECTS_DIR)/flameletModel.o\
-$(OBJECTS_DIR)/flameletModelA.o
+$(OBJECTS_DIR)/flameletModelA.o\
+$(OBJECTS_DIR)/CantPopeBray.o\
+$(OBJECTS_DIR)/coherentFlameModel1.o\
+$(OBJECTS_DIR)/coherentFlameModel2a.o\
+$(OBJECTS_DIR)/coherentFlameModel2b.o\
+$(OBJECTS_DIR)/coherentFlameModel3.o\
+$(OBJECTS_DIR)/ChengDiringer.o\
+$(OBJECTS_DIR)/ChoiHuh1.o\
+$(OBJECTS_DIR)/ChoiHuh2.o

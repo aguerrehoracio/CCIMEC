@@ -53,22 +53,25 @@ class flameletModelA
 private:
 
     //-Dictionary
-	dictionary dictionary_;
+    dictionary dictionary_;
 
     //Constants
-	scalar alphaSigma_;
+    scalar alphaSigma_;
     scalar GammaK_;
     scalar betaSigma_;
 
     //Fields
     volScalarField& rho_;    
-	volVectorField& U_;
-	volScalarField& Su_;
-	volScalarField& Sigma_;
-	volScalarField& b_;
+    volVectorField& U_;
+    volScalarField& Su_;
+    volScalarField& Sigma_;
+    volScalarField& b_;
+
+    //Thermo
+    psiuReactionThermo& thermo_;
 
     //TurbulenceModels
-	compressible::turbulenceModel& turbulence_;
+    compressible::turbulenceModel& turbulence_;
 
 
     // Private Member Functions
@@ -93,11 +96,12 @@ public:
         (
             volScalarField& rho,
             volVectorField& U,
-			volScalarField& Su,
-			volScalarField& Sigma,
-			volScalarField& b,
-			compressible::turbulenceModel& turbulence,
-			IOdictionary& mdData
+	    volScalarField& Su,
+	    volScalarField& Sigma,
+	    volScalarField& b,
+	    psiuReactionThermo& thermo,
+	    compressible::turbulenceModel& turbulence,
+	    IOdictionary& mdData
         );
 
 

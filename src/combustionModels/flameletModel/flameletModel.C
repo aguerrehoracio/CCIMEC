@@ -89,12 +89,13 @@ Foam::flameletModel::flameletModel
 
 Foam::autoPtr<Foam::flameletModel> Foam::flameletModel::New
 (
-	volScalarField& rho,
+    volScalarField& rho,
     volVectorField& U,
-	volScalarField& Su,
-	volScalarField& Sigma,
-	volScalarField& b,
-	compressible::turbulenceModel& turbulence,
+    volScalarField& Su,
+    volScalarField& Sigma,
+    volScalarField& b,
+    psiuReactionThermo& thermo,
+    compressible::turbulenceModel& turbulence,
     IOdictionary& mdData
 )
 {
@@ -118,7 +119,8 @@ Foam::autoPtr<Foam::flameletModel> Foam::flameletModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<flameletModel>(cstrIter()(rho, U, Su, Sigma, b, turbulence, mdData));
+    return autoPtr<flameletModel>
+      (cstrIter()(rho, U, Su, Sigma, b, thermo, turbulence, mdData));
 }
 
 

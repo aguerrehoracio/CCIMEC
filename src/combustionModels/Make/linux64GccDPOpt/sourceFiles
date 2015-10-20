@@ -1,3 +1,11 @@
 SOURCE = \
 flameletModel/flameletModel.C\
-flameletModelA/flameletModelA.C
+flameletModelA/flameletModelA.C\
+CantPopeBray/CantPopeBray.C\
+coherentFlameModel1/coherentFlameModel1.C\
+coherentFlameModel2a/coherentFlameModel2a.C\
+coherentFlameModel2b/coherentFlameModel2b.C\
+coherentFlameModel3/coherentFlameModel3.C\
+ChengDiringer/ChengDiringer.C\
+ChoiHuh1/ChoiHuh1.C\
+ChoiHuh2/ChoiHuh2.C

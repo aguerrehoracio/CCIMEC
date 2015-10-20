@@ -45,13 +45,14 @@ namespace Foam
 
 Foam::flameletModelA::flameletModelA
 (   
-	volScalarField& rho,
+    volScalarField& rho,
     volVectorField& U,
-	volScalarField& Su,
-	volScalarField& Sigma,
-	volScalarField& b,
-	compressible::turbulenceModel& turbulence,
-	IOdictionary& mdData
+    volScalarField& Su,
+    volScalarField& Sigma,
+    volScalarField& b,
+    psiuReactionThermo& thermo,
+    compressible::turbulenceModel& turbulence,
+    IOdictionary& mdData
 )
 :
     flameletModel
@@ -67,6 +68,7 @@ Foam::flameletModelA::flameletModelA
 	Su_(Su),
 	Sigma_(Sigma),
 	b_(b),
+        thermo_(thermo),
 	turbulence_(turbulence)
 {}
 

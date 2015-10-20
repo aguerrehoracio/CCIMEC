@@ -1,2 +1,10 @@
 include flameletModel/flameletModel.dep
 include flameletModelA/flameletModelA.dep
+include CantPopeBray/CantPopeBray.dep
+include coherentFlameModel1/coherentFlameModel1.dep
+include coherentFlameModel2a/coherentFlameModel2a.dep
+include coherentFlameModel2b/coherentFlameModel2b.dep
+include coherentFlameModel3/coherentFlameModel3.dep
+include ChengDiringer/ChengDiringer.dep
+include ChoiHuh1/ChoiHuh1.dep
+include ChoiHuh2/ChoiHuh2.dep

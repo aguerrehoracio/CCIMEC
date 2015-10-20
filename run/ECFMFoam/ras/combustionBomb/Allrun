@@ -1,0 +1,47 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+# model=CH1
+# model=CH2
+# model=CD
+# model=CPB
+model=CFM1
+
+cp constant/combustionProperties.$model constant/combustionProperties
+
+# up/UL = 2
+sed -i 's/internalField .*/internalField   uniform 1.4406;/g' 0/k
+sed -i 's/endTime .*/endTime         0.015;/g' system/controlDict
+$application > log.$application
+mv logSummary.dat logs/logSummary-$model-upoUL_2-Kcte.dat
+
+# up/UL = 3.5
+sed -i 's/internalField .*/internalField   uniform 4.118;/g' 0/k
+sed -i 's/endTime .*/endTime         0.01;/g' system/controlDict
+$application > log.$application
+mv logSummary.dat logs/logSummary-$model-upoUL_3.5-Kcte.dat
+
+# up/UL = 5
+sed -i 's/internalField .*/internalField   uniform 9.0;/g' 0/k
+$application > log.$application
+mv logSummary.dat logs/logSummary-$model-upoUL_5-Kcte.dat
+
+# up/UL = 6
+sed -i 's/internalField .*/internalField   uniform 12.965;/g' 0/k
+sed -i 's/endTime .*/endTime         0.015;/g' system/controlDict
+$application > log.$application
+mv logSummary.dat logs/logSummary-$model-upoUL_6-Kcte.dat
+
+# up/UL = 7
+sed -i 's/internalField .*/internalField   uniform 17.64735;/g' 0/k
+sed -i 's/endTime .*/endTime         0.017;/g' system/controlDict
+$application > log.$application
+mv logSummary.dat logs/logSummary-$model-upoUL_7-Kcte.dat
+
+# ----------------------------------------------------------------- end-of-file
