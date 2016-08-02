@@ -105,19 +105,31 @@ void Foam::coherentFlameModel1::update()
   Info<<"Updating Sigma Source terms"<<endl;
 
   volVectorField M(fvc::grad(b_));
+  volScalarField mgb_ = mag(M);
+
+  dimensionedScalar dSigma = 1.0e-3*
+    (b_* (scalar(1.0) - b_) * mgb_)().weightedAverage(rho_.mesh().V())
+    /((b_ * (scalar(1.0) - b_))().weightedAverage(rho_.mesh().V()) + SMALL)
+    + dimensionedScalar("dSig", Sigma_.dimensions(), SMALL);
+
+  M /= (max(Sigma_, mgb_) + dSigma);
+
   volScalarField magM = mag(M);
+
   // M /= Sigma_ + dimensionedScalar("tol", dimless/dimLength, 1e-2);
-  M /= (magM + dimensionedScalar("tol", dimless/dimLength, SMALL));
+  // M /= (magM + dimensionedScalar("tol", dimless/dimLength, SMALL));
 
-  volScalarField orientationFactor = 1.0 - (M & M);
+  volScalarField orientationFactor = scalar(1.0) - (M & M);
+  orientationFactor.max(0.0);
+  orientationFactor.min(1.0);
+  Info<< "min(alpha) = " << min(orientationFactor).value() << endl;
 
-  volTensorField A_ = I * (1.0 - orientationFactor / 3.0) - (M * M);
+  volTensorField A_ = I * (scalar(1.0) - orientationFactor / 3.0) - (M * M);
   volTensorField gradU(fvc::grad(U_));
 
   volScalarField P1 = rho_ * alphaSigma_ * turbulence_.epsilon() / 
-    (turbulence_.k() + dimensionedScalar("tol", pow(dimVelocity,2), SMALL));
+    (turbulence_.k() + dimensionedScalar("ktol", pow(dimVelocity,2), 1.0e-3));
   
-  // volScalarField P2 = rho_ * (2.0 / 3.0) * fvc::div(U_);
   volScalarField P2 = rho_ * (A_ && gradU);
 
   ProdRateForSigma_ = P1 + P2;

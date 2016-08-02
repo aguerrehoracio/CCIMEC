@@ -128,11 +128,22 @@ void Foam::coherentFlameModel2a::update()
   Info<<"Updating Sigma Source terms"<<endl;
 
   volVectorField M(fvc::grad(b_));
-  volScalarField magM = mag(M);
+  volScalarField mgb_ = mag(M);
+
+  dimensionedScalar dSigma = 1.0e-3*
+    (b_* (scalar(1.0) - b_) * mgb_)().weightedAverage(rho_.mesh().V())
+    /((b_ * (scalar(1.0) - b_))().weightedAverage(rho_.mesh().V()) + SMALL)
+    + dimensionedScalar("dSig", Sigma_.dimensions(), SMALL);
+
+  M /= (max(Sigma_, mgb_) + dSigma);
+
+  // volScalarField magM = mag(M);
   // M /= Sigma_ + dimensionedScalar("tol", dimless/dimLength, 1e-2);
-  M /= magM + dimensionedScalar("tol", dimless/dimLength, SMALL);
+  // M /= (magM + dimensionedScalar("tol", dimless/dimLength, SMALL));
   
-  volScalarField orientationFactor = 1.0 - (M & M);
+  volScalarField orientationFactor = scalar(1.0) - (M & M);
+  orientationFactor.max(0.0);
+  orientationFactor.min(1.0);
 
   volTensorField A_ = I * (1.0 - orientationFactor / 3.0) - (M * M);
   volTensorField gradU(fvc::grad(U_));
@@ -153,9 +164,14 @@ void Foam::coherentFlameModel2a::update()
                  		         pow(dimVelocity,2)/dimTime, SMALL)));
 
   volScalarField lRatio(lt / deltaL);
+
   volScalarField uRatio(up / Su_);
 
-  volScalarField s(log10 (lRatio));
+  volScalarField s = max
+    (
+       log10 (lRatio),
+       scalar(-0.4+SMALL)
+    );
 
   if(fittedGammaK_){
     GammaK = 0.75 * exp(-1.2 / pow(uRatio, 0.3)) * pow(lRatio, 2.0/3.0);
@@ -164,7 +180,7 @@ void Foam::coherentFlameModel2a::update()
       (1.0 - 0.5 * exp(-pow(uRatio, 1.0/3.0)));
     volScalarField r = -exp(-(s+0.4)) / (s+0.4) + 
       (1.0 - exp(-(s+0.4))) * (sigma1 * s - 0.11);
-    
+
     GammaK = pow(10.0, r);
   }
 
@@ -180,7 +196,6 @@ void Foam::coherentFlameModel2a::update()
   volScalarField P1 = rho_ * alphaSigma_ * GammaK * turbulence_.epsilon() / 
     (turbulence_.k() + dimensionedScalar("tol", pow(dimVelocity,2), SMALL));
   
-  // volScalarField P2 = rho_ * (2.0 / 3.0) * fvc::div(U_);
   volScalarField P2 = rho_ * (A_ && gradU);
 
   ProdRateForSigma_ = P1 + P2;

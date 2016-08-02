@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
 
             #include "ftEqn.H"
             #include "bEqn.H"
-            #include "EauEqn.H"
-            #include "EaEqn.H"
+	    #include "EauEqn.H"
+	    #include "EaEqn.H"
 
             if (!ign.ignited())
             {

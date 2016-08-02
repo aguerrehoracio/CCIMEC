@@ -714,8 +714,6 @@ ECFMFoam.dep: UEqn.H
 ECFMFoam.dep: ftEqn.H
 ECFMFoam.dep: bEqn.H
 ECFMFoam.dep: newIgniteSigma.H
-ECFMFoam.dep: $(WM_PROJECT_DIR)/src/engine/lnInclude/StCorr.H
-ECFMFoam.dep: $(WM_PROJECT_DIR)/src/engine/lnInclude/ignite.H
 ECFMFoam.dep: EauEqn.H
 ECFMFoam.dep: EaEqn.H
 ECFMFoam.dep: pEqn.H

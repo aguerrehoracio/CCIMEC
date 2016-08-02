@@ -29,33 +29,7 @@ if (ign.ignited())
     surfaceScalarField nf((mesh.Sf() & nfVec));
     n /= mgb;
 
-    flameletObject.update();
-    const volScalarField& Ptot = flameletObject.SigmaProd();
-    const volScalarField& Destruction = flameletObject.SigmaDestr();
-
-    fvScalarMatrix SigmaEqn
-      (
-          fvm::ddt(rho, Sigma)
-        + fvm::div(phi, Sigma, "div(phi,Sigma)")
-        - fvm::laplacian(turbulence->alphaEff(), Sigma)
-	+ fvm::Sp(fvc::div(U) * rho, Sigma)
-       ==
-          fvm::Sp(Ptot, Sigma)
-        - fvm::Sp(Destruction, Sigma)
-	+ fvOptions(rho, Sigma)
-       );
-
-    // Add ignition cell contribution to Sigma-equation
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    #include "newIgniteSigma.H"
-    
-    SigmaEqn.solve();
-
-    Sigma.max(0.0);
-
-    Info<< "max(Sigma) = " << max(Sigma).value() << endl;
-
-    #include "StCorr.H"
+    // #include "StCorr.H"
 
     // Calculate turbulent flame speed flux
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,40 +42,6 @@ if (ign.ignited())
     // ).value()*runTime.deltaTValue();
 
     // Info<< "Max St-Courant Number = " << StCoNum << endl;
-
-    // Create b equation
-    // ~~~~~~~~~~~~~~~~~
-    fvScalarMatrix bEqn
-    (
-        fvm::ddt(rho, b)
-      + mvConvection->fvmDiv(phi, b)
-      - fvm::laplacian(turbulence->alphaEff(), b)
-     ==
-      - rhou * StCorr * Su * Sigma
-	// - rhou * StCorr * Su * rho * Sigma
-      + fvOptions(rho, b)
-    );
-
-
-    // Add ignition cell contribution to b-equation
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    #include "ignite.H"
-
-
-    // Solve for b
-    // ~~~~~~~~~~~
-    bEqn.relax();
-
-    fvOptions.constrain(bEqn);
-
-    bEqn.solve();
-
-    fvOptions.correct(b);
-
-    b.max(0.0);
-
-    Info<< "min(b) = " << min(b).value() << endl;
-
 
     // Calculate coefficients for Gulder's flame speed correlation
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -293,6 +233,75 @@ if (ign.ignited())
     //         << args.executable() << " : Unknown Xi model " << XiModel
     //         << abort(FatalError);
     // }
+
+    // Add ignition cell contribution to Sigma-equation
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #include "newIgniteSigma.H"
+
+    flameletObject.update();
+    const volScalarField& Ptot = flameletObject.SigmaProd();
+    const volScalarField& Destruction = flameletObject.SigmaDestr();
+
+    fvScalarMatrix SigmaEqn
+    (
+        fvm::ddt(rho, Sigma)
+	  // + fvm::div(phi, Sigma, "div(phi,Sigma)")
+      + mvConvection->fvmDiv(phi, Sigma)
+      - fvm::laplacian(turbulence->alphaEff(), Sigma)
+      + fvm::Sp(fvc::div(U) * rho, Sigma)
+     ==
+	fvm::Sp(Ptot, Sigma)
+      - fvm::Sp(Destruction, Sigma)
+	// - rho * fvc::laplacian(Su, b) // additional term for the CFM3 model
+      + fvOptions(rho, Sigma)
+    );
+
+    SigmaEqn.relax();
+    
+    fvOptions.constrain(SigmaEqn);
+    
+    SigmaEqn.solve();
+
+    fvOptions.correct(Sigma);
+
+    Sigma.max(0.0);
+
+    Info<< "max(Sigma) = " << max(Sigma).value() << endl;
+
+    volScalarField bOld = b;
+
+    // Xi = Sigma/mgb;
+    // Xi.max(1.0);
+
+    // Create b equation
+    // ~~~~~~~~~~~~~~~~~
+    fvScalarMatrix bEqn
+    (
+        fvm::ddt(rho, b)
+      + mvConvection->fvmDiv(phi, b)
+      - fvm::laplacian(turbulence->alphaEff(), b)
+     ==
+      - rho * Su * Sigma
+	// - rhou * Su * Sigma
+      + fvOptions(rho, b)
+    );
+
+    // Solve for b
+    // ~~~~~~~~~~~
+    bEqn.relax();
+
+    fvOptions.constrain(bEqn);
+
+    bEqn.solve();
+
+    fvOptions.correct(b);
+
+    b.max(0.0);
+    b.min(1.0);
+
+    b = min(b, bOld);
+
+    Info<< "min(b) = " << min(b).value() << endl;
         
     Info<< "Combustion progress = "
         << 100*(scalar(1) - b)().weightedAverage(mesh.V()).value() << "%"

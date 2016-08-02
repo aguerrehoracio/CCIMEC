@@ -48,7 +48,7 @@ Description
         {
             alphaSigma    1.0;
             betaSigma     0.4;
-            b_star        0.5;
+            bStar         0.5;
         }
     \endverbatim
 

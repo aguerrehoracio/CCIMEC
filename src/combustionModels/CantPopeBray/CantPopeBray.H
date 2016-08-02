@@ -42,12 +42,12 @@ Description
         {
             alphaSigma    0.28;
             betaSigma     1.0;
-            Acoeff        10.0;
+            aCoeff        10.0;
         }
     \endverbatim
 
     alphaSigma = C_A coefficient from the paper.
-    Acoeff = A coefficient from the paper.
+    aCoeff = A coefficient from the paper.
 
 SourceFiles
     CantPopeBray.C
@@ -80,7 +80,7 @@ private:
     //Constants
     scalar alphaSigma_;
     scalar betaSigma_;
-    scalar Acoef_;
+    scalar aCoeff_;
 
     //Fields
     volScalarField& rho_;    

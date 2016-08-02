@@ -76,11 +76,11 @@ Foam::CantPopeBray::CantPopeBray
 	    1.0
 	)
     ),
-    Acoef_
+    aCoeff_
     (
         dictionary_.lookupOrDefault
 	(
-	    "Acoef",
+	    "aCoeff",
 	    10.0
 	)
      ),
@@ -105,11 +105,24 @@ void Foam::CantPopeBray::update()
   Info<<"Updating Sigma Source terms"<<endl;
 
   volVectorField M(fvc::grad(b_));
-  volScalarField magM = mag(M);
-  // M /= Sigma_ + dimensionedScalar("tol", dimless/dimLength, SMALL);
-  M /= magM + dimensionedScalar("tol", dimless/dimLength, SMALL);
+  volScalarField mgb_ = mag(M);
 
-  volScalarField orientationFactor = 1.0 - (M & M);
+  dimensionedScalar dSigma = 1.0e-3*
+    (b_* (scalar(1.0) - b_) * mgb_)().weightedAverage(rho_.mesh().V())
+    /((b_ * (scalar(1.0) - b_))().weightedAverage(rho_.mesh().V()) + SMALL)
+    + dimensionedScalar("dSig", Sigma_.dimensions(), SMALL);
+
+  M /= (max(Sigma_, mgb_) + dSigma);
+
+  volScalarField magM = mag(M);
+
+  // M /= Sigma_ + dimensionedScalar("tol", dimless/dimLength, 1e-2);
+  // M /= (magM + dimensionedScalar("tol", dimless/dimLength, SMALL));
+
+  volScalarField orientationFactor = scalar(1.0) - (M & M);
+  orientationFactor.max(0.0);
+  orientationFactor.min(1.0);
+  Info<< "min(alpha) = " << min(orientationFactor).value() << endl;
 
   volTensorField A_ = I * (1.0 - orientationFactor / 3.0) - (M * M);
   volTensorField gradU(fvc::grad(U_));
@@ -121,20 +134,15 @@ void Foam::CantPopeBray::update()
   volScalarField nu = (thermo_.muu() / thermo_.rhou() * b_ +
 		       thermo_.mub() / thermo_.rhob() * (1.0 - b_));
 
-  // volScalarField P1 = rho_ * alphaSigma_ * orientationFactor *
-  //   sqrt(turbulence_.epsilon() / nu);
-  volScalarField P1 = rho_ * alphaSigma_ * sqrt(turbulence_.epsilon() / nu);
+  volScalarField P1 = rho_ * alphaSigma_ * orientationFactor *
+    sqrt(turbulence_.epsilon() / nu);
   
-  // volScalarField P2 = rho_ * (2.0 / 3.0) * fvc::div(U_);
   volScalarField P2 = rho_ * (A_ && gradU);
 
   ProdRateForSigma_ = P1 + P2;
 
-  // DestrRateForSigma_ = rho_ * betaSigma_ * orientationFactor / 3.0 *
-  //   (2.0 + exp(-Acoef_*R_)) * Su_ * Sigma_ / (b_ + SMALL);
-  DestrRateForSigma_ = rho_ * betaSigma_ / 3.0 *
-    (2.0 + exp(-Acoef_*R_)) * Su_ * Sigma_ / (b_ + SMALL);
-
+  DestrRateForSigma_ = rho_ * betaSigma_ * orientationFactor / 3.0 *
+    (2.0 + exp(-aCoeff_*R_)) * Su_ * Sigma_ / (b_ + SMALL);
 }
 
 void Foam::CantPopeBray::name
